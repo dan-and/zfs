@@ -4,6 +4,11 @@ VPATH = \
 	$(top_srcdir)/module/zfs \
 	$(top_srcdir)/module/zcommon \
 	$(top_srcdir)/module/lua \
+	$(top_srcdir)/module/zstd \
+	$(top_srcdir)/module/zstd/common \
+	$(top_srcdir)/module/zstd/compress \
+	$(top_srcdir)/module/zstd/decompress \
+	$(top_srcdir)/module/zstd/freebsd \
 	$(top_srcdir)/lib/libzpool
 
 # Suppress unused but set variable warnings often due to ASSERTs
@@ -16,7 +21,12 @@ AM_CFLAGS += -DLIB_ZPOOL_BUILD
 
 DEFAULT_INCLUDES += \
 	-I$(top_srcdir)/include \
-	-I$(top_srcdir)/lib/libspl/include
+	-I$(top_srcdir)/lib/libspl/include \
+	-I$(top_srcdir)/module/zfs/zstd \
+	-I$(top_srcdir)/module/zfs/zstd/lib \
+	-I$(top_srcdir)/module/zfs/zstd/common \
+	-I$(top_srcdir)/module/zfs/zstd/compress \
+	-I$(top_srcdir)/module/zfs/zstd/decompress
 
 lib_LTLIBRARIES = libzpool.la
 
@@ -161,6 +171,28 @@ KERNEL_C = \
 	zrlock.c \
 	zthr.c
 
+ZSTD_C = \
+	zstd_common.c \
+	fse_decompress.c \
+	entropy_common.c \
+	xxhash.c \
+	hist.c \
+	zstd_compress.c \
+	zstd_compress_literals.c \
+	zstd_compress_sequences.c \
+	fse_compress.c \
+	huf_compress.c \
+	zstd_double_fast.c \
+	zstd_fast.c \
+	zstd_lazy.c \
+	zstd_ldm.c \
+	zstd_opt.c \
+	zstd_ddict.c \
+	zstd_decompress.c \
+	zstd_decompress_block.c \
+	huf_decompress.c \
+	zstd.c
+
 LUA_C = \
 	lapi.c \
 	lauxlib.c \
@@ -190,7 +222,8 @@ LUA_C = \
 nodist_libzpool_la_SOURCES = \
 	$(USER_C) \
 	$(KERNEL_C) \
-	$(LUA_C)
+	$(LUA_C) \
+	$(ZSTD_C)
 
 libzpool_la_LIBADD = \
 	$(top_builddir)/lib/libicp/libicp.la \

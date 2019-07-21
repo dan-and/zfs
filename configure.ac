@@ -144,6 +144,7 @@ AC_CONFIG_FILES([
 	module/lua/Makefile
 	module/icp/Makefile
 	module/spl/Makefile
+	module/zstd/Makefile
 	include/Makefile
 	include/linux/Makefile
 	include/spl/Makefile
@@ -156,6 +157,7 @@ AC_CONFIG_FILES([
 	include/sys/crypto/Makefile
 	include/sys/sysevent/Makefile
 	include/sys/lua/Makefile
+	include/sys/zstd/Makefile
 	scripts/Makefile
 	tests/Makefile
 	tests/test-runner/Makefile

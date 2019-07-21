@@ -516,6 +516,9 @@ recv_begin_check_feature_flags_impl(uint64_t featureflags, spa_t *spa)
 	if ((featureflags & DMU_BACKUP_FEATURE_LZ4) &&
 	    !spa_feature_is_enabled(spa, SPA_FEATURE_LZ4_COMPRESS))
 		return (SET_ERROR(ENOTSUP));
+	if ((featureflags & DMU_BACKUP_FEATURE_ZSTD) &&
+	    !spa_feature_is_enabled(spa, SPA_FEATURE_ZSTD_COMPRESS))
+		return (SET_ERROR(ENOTSUP));
 	if ((featureflags & DMU_BACKUP_FEATURE_EMBED_DATA) &&
 	    !spa_feature_is_enabled(spa, SPA_FEATURE_EMBEDDED_DATA))
 		return (SET_ERROR(ENOTSUP));

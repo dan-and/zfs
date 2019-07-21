@@ -880,7 +880,8 @@ send_do_embed(dmu_send_cookie_t *dscp, const blkptr_t *bp)
 	 * Compression function must be legacy, or explicitly enabled.
 	 */
 	if ((BP_GET_COMPRESS(bp) >= ZIO_COMPRESS_LEGACY_FUNCTIONS &&
-	    !(dscp->dsc_featureflags & DMU_BACKUP_FEATURE_LZ4)))
+	    !(dscp->dsc_featureflags & DMU_BACKUP_FEATURE_LZ4) &&
+	    !(dscp->dsc_featureflags & DMU_BACKUP_FEATURE_ZSTD)))
 		return (B_FALSE);
 
 	/*
@@ -1942,6 +1943,11 @@ setup_featureflags(struct dmu_send_params *dspp, objset_t *os,
 	/* raw send implies compressok */
 	if (dspp->compressok || dspp->rawok)
 		*featureflags |= DMU_BACKUP_FEATURE_COMPRESSED;
+
+	if ((dspp->compressok || dspp->embedok) &&
+	    dsl_dataset_feature_is_active(to_ds, SPA_FEATURE_ZSTD_COMPRESS))
+		*featureflags |= DMU_BACKUP_FEATURE_ZSTD;
+
 	if (dspp->rawok && os->os_encrypted)
 		*featureflags |= DMU_BACKUP_FEATURE_RAW;
 
